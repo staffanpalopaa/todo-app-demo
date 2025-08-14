@@ -3,10 +3,9 @@ import UpdateTodoDetailsCommand from '../../../domain/command/UpdateTodoDetailsC
 
 const router = express.Router();
 
-router.patch('/:todoID', async (req, res) => {
+router.post('/update-todo-details', async (req, res) => {
   try {
-    const { todoID } = req.params;
-    const { title, description, dueDate, priority } = req.body;
+    const { todoID, title, description, dueDate, priority } = req.body;
     const result = await UpdateTodoDetailsCommand.execute({ todoID, title, description, dueDate, priority });
     res.status(200).json(result);
   } catch (err) {
@@ -15,6 +14,6 @@ router.patch('/:todoID', async (req, res) => {
 });
 
 export default {
-  routeBase: '/todos',
+  routeBase: '/',
   router,
 };

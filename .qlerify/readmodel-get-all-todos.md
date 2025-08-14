@@ -39,51 +39,72 @@ Format:
 
 Tech Stacks:
  - Language: JavaScript ESM
- - Framework: JavaScript with Express
+ - Framework: Legacy Project
  - Test Framework: Jest
 
 Folder Structure:
 ```bash
 server/
-├── package.json
-├── .gitignore
 ├── src/
+│   ├── domain/
+│   │   ├── entity/
+│   │   │   └── Todo.js
+│   │   ├── command/
+│   │   │   ├── MarkTodoAsReopenedCommand.js
+│   │   │   ├── UpdateTodoDetailsCommand.js
+│   │   │   ├── CreateTodoCommand.js
+│   │   │   ├── MarkTodoAsCompletedCommand.js
+│   │   │   └── DeleteTodoCommand.js
+│   │   └── readmodel/
+│   │       ├── GetActiveTodosReadModel.js
+│   │       ├── GetAllTodosReadModel.js
+│   │       ├── GetTodoDetailsReadModel.js
+│   │       └── GetCompletedTodosReadModel.js
 │   ├── interfaces/
 │   │   └── http/
 │   │       └── controllers/
-│   │           ├── .gitkeep
-│   │           ├── CreateTodoController.js
+│   │           ├── GetAllTodosController.js
 │   │           ├── UpdateTodoDetailsController.js
-│   │           ├── MarkTodoAsCompletedController.js
+│   │           ├── DeleteTodoController.js
+│   │           ├── GetActiveTodosController.js
+│   │           ├── CreateTodoController.js
 │   │           ├── MarkTodoAsReopenedController.js
-│   │           └── DeleteTodoController.js
-│   ├── config/
-│   │   └── index.js
+│   │           ├── GetCompletedTodosController.js
+│   │           ├── GetTodoDetailsController.js
+│   │           ├── .gitkeep
+│   │           └── MarkTodoAsCompletedController.js
+│   ├── bootstrap/
+│   │   ├── express.js
+│   │   ├── app.js
+│   │   └── loader.js
 │   ├── infrastructure/
 │   │   └── db/
 │   │       ├── mongo.js
-│   │       ├── memory.js
 │   │       ├── index.js
-│   │       └── sqlite.js
-│   ├── bootstrap/
-│   │   ├── app.js
-│   │   ├── express.js
-│   │   └── loader.js
-│   ├── docs/
-│   │   └── .gitkeep
-│   ├── routes/
+│   │       ├── sqlite.js
+│   │       └── memory.js
+│   ├── config/
 │   │   └── index.js
-│   └── domain/
-│       ├── entity/
-│       │   └── Todo.js
-│       └── command/
-│           ├── CreateTodoCommand.js
-│           ├── UpdateTodoDetailsCommand.js
-│           ├── MarkTodoAsCompletedCommand.js
-│           ├── MarkTodoAsReopenedCommand.js
-│           └── DeleteTodoCommand.js
+│   ├── docs/
+│   │   ├── .gitkeep
+│   │   └── swagger.yaml
+│   └── routes/
+│       └── index.js
+├── .gitignore
+├── tests/
+│   ├── mark-todo-as-completed-status-update.test.js
+│   ├── mark-todo-as-reopened-completed-to-active-status.feature
+│   ├── updates-its-title-or-description.test.js
+│   ├── create-todo-and-verify-visibility.feature
+│   ├── mark-todo-as-reopened-completed-to-active-status.test.js
+│   ├── mark-todo-as-completed-status-update.feature
+│   ├── delete-todo.feature
+│   ├── create-todo-and-verify-visibility.test.js
+│   ├── updates-its-title-or-description.feature
+│   └── delete-todo.test.js
+├── .env.example
 ├── server.js
-└── .env.example
+└── package.json
 ```
 
 Route Codes:
@@ -160,12 +181,11 @@ Old ReadModel Information:
 undefined
 
 Current ReadModel Information:
-{"id":"043dce0b-1fcd-4b88-8a1e-aeabcf42d0f8","description":"Get All Todos","cardinality":"one-to-many","dataFields":[{"name":"Existing Todo Title","type":null},{"name":"Status","type":null},{"name":"Due Date","type":null},{"name":"Priority","type":null},{"name":"Created Date","type":null}],"gwtDescriptions":["Given the user is on the todo creation page, When the user enters a title and clicks 'Add', Then a new todo is created and visible in the list."]}
+{"id":"10844d94-391d-438c-ad36-c3e2bca449c3","description":"Get All Todos","cardinality":"one-to-many","dataFields":[{"name":"Todo ID","type":null},{"name":"Title","type":null},{"name":"Description","type":null},{"name":"Due Date","type":null},{"name":"Priority","type":null},{"name":"Status","type":null}],"gwtDescriptions":["Given an existing todo, when the user updates its title or description, then the todo's details are updated."]}
 
 Swagger Documentation:
 openapi: 3.0.0
 info:
-  title: Todo App API
   version: 1.0.0
   description: API for managing a Todo.
 servers:
@@ -185,15 +205,17 @@ paths:
               schema:
                 type: array
                 properties:
-                  existingTodoTitle:
+                  todoID:
                     type: string
-                  status:
+                  title:
+                    type: string
+                  description:
                     type: string
                   dueDate:
                     type: string
                   priority:
                     type: string
-                  createdDate:
+                  status:
                     type: string
         '400':
           description: Bad Request
@@ -205,55 +227,22 @@ components:
       properties:
         todoID:
           type: string
-          example: T-001
+          example: '1'
         title:
           type: string
-          example: Buy Groceries
+          example: Buy groceries
         description:
           type: string
-          example: Milk, Eggs, Bread
+          example: Weekly shopping
         dueDate:
           type: string
-          example: '2023-10-26'
+          example: '2023-11-01'
         priority:
           type: string
           example: High
         status:
           type: string
-          example: Active
-        completionNotes:
-          type: string
-          example: All items purchased
-        actualCompletionDate:
-          type: string
-          example: '2023-10-25'
-        timeSpentMinutes:
-          type: string
-          example: '60'
-        satisfactionRating:
-          type: string
-          example: '5'
-        reopenReason:
-          type: string
-          example: Needs review
-        priorityAdjustment:
-          type: string
-          example: Increase to Critical
-        estimatedEffortHours:
-          type: string
-          example: '2'
-        deletionReason:
-          type: string
-          example: Duplicate
-        deletionComment:
-          type: string
-          example: Created by mistake
-        confirmDeletion:
-          type: string
-          example: 'true'
-        retainForDays:
-          type: string
-          example: '30'
+          example: Pending
 
 
 Update the given code files or create new ones if needed.

@@ -1,35 +1,23 @@
-import Todo from '../entity/Todo.js';
 import db from '../../infrastructure/db/index.js';
+import Todo from '../entity/Todo.js';
 
 class UpdateTodoDetailsCommand {
   static async execute({ todoID, title, description, dueDate, priority }) {
-    if (!todoID) {
-      throw new Error('Todo ID is required to update Todo details.');
+    const todo = await db.findById('Todo', todoID);
+    if (!todo) {
+      throw new Error('Todo not found');
     }
 
-    const existingTodoData = await db.findById('Todo', todoID);
+    const updatedTodo = new Todo({
+      ...todo,
+      title: title || todo.title,
+      description: description || todo.description,
+      dueDate: dueDate || todo.dueDate,
+      priority: priority || todo.priority,
+    });
 
-    if (!existingTodoData) {
-      throw new Error(`Todo with ID ${todoID} not found.`);
-    }
-
-    const todo = new Todo(existingTodoData);
-
-    if (title !== undefined) {
-      todo.title = title;
-    }
-    if (description !== undefined) {
-      todo.description = description;
-    }
-    if (dueDate !== undefined) {
-      todo.dueDate = dueDate;
-    }
-    if (priority !== undefined) {
-      todo.priority = priority;
-    }
-
-    await db.update('Todo', todo.toJSON());
-    return todo.toJSON();
+    await db.update('Todo', todoID, updatedTodo.toJSON());
+    return updatedTodo.toJSON();
   }
 }
 

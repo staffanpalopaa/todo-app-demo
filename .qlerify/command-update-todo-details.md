@@ -41,43 +41,72 @@ Format:
 
 Tech Stacks:
  - Language: JavaScript ESM
- - Framework: JavaScript with Express
+ - Framework: Legacy Project
  - Test Framework: Jest
 
 Folder Structure:
 ```bash
 server/
-├── package.json
-├── .gitignore
 ├── src/
+│   ├── domain/
+│   │   ├── entity/
+│   │   │   └── Todo.js
+│   │   ├── command/
+│   │   │   ├── MarkTodoAsReopenedCommand.js
+│   │   │   ├── UpdateTodoDetailsCommand.js
+│   │   │   ├── CreateTodoCommand.js
+│   │   │   ├── MarkTodoAsCompletedCommand.js
+│   │   │   └── DeleteTodoCommand.js
+│   │   └── readmodel/
+│   │       ├── GetActiveTodosReadModel.js
+│   │       ├── GetAllTodosReadModel.js
+│   │       ├── GetTodoDetailsReadModel.js
+│   │       └── GetCompletedTodosReadModel.js
 │   ├── interfaces/
 │   │   └── http/
 │   │       └── controllers/
+│   │           ├── GetAllTodosController.js
+│   │           ├── UpdateTodoDetailsController.js
+│   │           ├── DeleteTodoController.js
+│   │           ├── GetActiveTodosController.js
+│   │           ├── CreateTodoController.js
+│   │           ├── MarkTodoAsReopenedController.js
+│   │           ├── GetCompletedTodosController.js
+│   │           ├── GetTodoDetailsController.js
 │   │           ├── .gitkeep
-│   │           └── CreateTodoController.js
-│   ├── config/
-│   │   └── index.js
+│   │           └── MarkTodoAsCompletedController.js
+│   ├── bootstrap/
+│   │   ├── express.js
+│   │   ├── app.js
+│   │   └── loader.js
 │   ├── infrastructure/
 │   │   └── db/
 │   │       ├── mongo.js
-│   │       ├── memory.js
 │   │       ├── index.js
-│   │       └── sqlite.js
-│   ├── bootstrap/
-│   │   ├── app.js
-│   │   ├── express.js
-│   │   └── loader.js
-│   ├── docs/
-│   │   └── .gitkeep
-│   ├── routes/
+│   │       ├── sqlite.js
+│   │       └── memory.js
+│   ├── config/
 │   │   └── index.js
-│   └── domain/
-│       ├── entity/
-│       │   └── Todo.js
-│       └── command/
-│           └── CreateTodoCommand.js
+│   ├── docs/
+│   │   ├── .gitkeep
+│   │   └── swagger.yaml
+│   └── routes/
+│       └── index.js
+├── .gitignore
+├── tests/
+│   ├── mark-todo-as-completed-status-update.test.js
+│   ├── mark-todo-as-reopened-completed-to-active-status.feature
+│   ├── updates-its-title-or-description.test.js
+│   ├── create-todo-and-verify-visibility.feature
+│   ├── mark-todo-as-reopened-completed-to-active-status.test.js
+│   ├── mark-todo-as-completed-status-update.feature
+│   ├── delete-todo.feature
+│   ├── create-todo-and-verify-visibility.test.js
+│   ├── updates-its-title-or-description.feature
+│   └── delete-todo.test.js
+├── .env.example
 ├── server.js
-└── .env.example
+└── package.json
 ```
 
 Route Codes:
@@ -157,12 +186,11 @@ Old Command Information:
 undefined
 
 Current Command Information:
-{"id":"73786862-fb0c-49b3-a3d8-c1b49d8f6c17","description":"Update Todo Details","cardinality":"one-to-many","dataFields":[{"name":"Title","type":null},{"name":"Description","type":null},{"name":"Due Date","type":null},{"name":"Priority","type":null}],"gwtDescriptions":["Given an existing todo, When the user updates its title or description, Then the todo's details are updated."]}
+{"id":"391d53dc-ee1e-48cc-9cb5-4b7a0137d99e","description":"Update Todo Details","cardinality":"one-to-many","dataFields":[{"name":"Todo ID","type":null},{"name":"Title","type":null},{"name":"Description","type":null},{"name":"Due Date","type":null},{"name":"Priority","type":null}],"gwtDescriptions":["Given an existing todo, when the user updates its title or description, then the todo's details are updated."]}
 
 Swagger Documentation:
 openapi: 3.0.0
 info:
-  title: Todo App API
   version: 1.0.0
   description: API for managing a Todo.
 servers:
@@ -186,6 +214,8 @@ paths:
             schema:
               type: object
               properties:
+                todoID:
+                  type: string
                 title:
                   type: string
                 description:
@@ -201,55 +231,22 @@ components:
       properties:
         todoID:
           type: string
-          example: T-001
+          example: '1'
         title:
           type: string
-          example: Buy Groceries
+          example: Buy groceries
         description:
           type: string
-          example: Milk, Eggs, Bread
+          example: Weekly shopping
         dueDate:
           type: string
-          example: '2023-10-26'
+          example: '2023-11-01'
         priority:
           type: string
           example: High
         status:
           type: string
-          example: Active
-        completionNotes:
-          type: string
-          example: All items purchased
-        actualCompletionDate:
-          type: string
-          example: '2023-10-25'
-        timeSpentMinutes:
-          type: string
-          example: '60'
-        satisfactionRating:
-          type: string
-          example: '5'
-        reopenReason:
-          type: string
-          example: Needs review
-        priorityAdjustment:
-          type: string
-          example: Increase to Critical
-        estimatedEffortHours:
-          type: string
-          example: '2'
-        deletionReason:
-          type: string
-          example: Duplicate
-        deletionComment:
-          type: string
-          example: Created by mistake
-        confirmDeletion:
-          type: string
-          example: 'true'
-        retainForDays:
-          type: string
-          example: '30'
+          example: Pending
 
 
 Update the given code files or create new ones if needed.

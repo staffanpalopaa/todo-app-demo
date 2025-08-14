@@ -6,9 +6,9 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     const todos = await GetAllTodosReadModel.query();
-    res.status(200).json(todos);
+    res.json(todos);
   } catch (err) {
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(500).json({ message: err.message });
   }
 });
 
