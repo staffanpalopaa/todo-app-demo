@@ -1,0 +1,384 @@
+openapi: 3.0.3
+info:
+  title: Todo App API Specification
+  version: '47'
+  description: API documentation for the Todo App bounded context.
+servers:
+  - url: /api/v1
+    description: Development Server
+tags:
+  - name: TodoApp
+    description: Operations related to the TodoApp bounded context.
+paths:
+  /create-todo:
+    post:
+      summary: Create Todo
+      description: Executes the "Create Todo" command. ...
+      operationId: createTodo
+      tags:
+        - TodoApp
+      responses:
+        '200':
+          description: 'OK: The resource was updated successfully.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTodoRequest'
+  /update-todo-details:
+    post:
+      summary: Update Todo Details
+      description: Executes the "Update Todo Details" command. ...
+      operationId: updateTodoDetails
+      tags:
+        - TodoApp
+      responses:
+        '200':
+          description: 'OK: The resource was updated successfully.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTodoDetailsRequest'
+  /mark-todo-as-completed:
+    post:
+      summary: Mark Todo as Completed
+      description: Executes the "Mark Todo as Completed" command. ...
+      operationId: markTodoAsCompleted
+      tags:
+        - TodoApp
+      responses:
+        '200':
+          description: 'OK: The resource was updated successfully.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarkTodoAsCompletedRequest'
+  /mark-todo-as-reopened:
+    post:
+      summary: Mark Todo as Reopened
+      description: Executes the "Mark Todo as Reopened" command. ...
+      operationId: markTodoAsReopened
+      tags:
+        - TodoApp
+      responses:
+        '200':
+          description: 'OK: The resource was updated successfully.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarkTodoAsReopenedRequest'
+  /delete-todo:
+    post:
+      summary: Delete Todo
+      description: Executes the "Delete Todo" command. ...
+      operationId: deleteTodo
+      tags:
+        - TodoApp
+      responses:
+        '200':
+          description: 'OK: The resource was updated successfully.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteTodoRequest'
+  /get-all-todos:
+    get:
+      summary: Get All Todos
+      description: Retrieves data based on the "Get All Todos" query. This is a synchronous query operation.
+      operationId: getAllTodos
+      tags:
+        - TodoApp
+      responses:
+        '200':
+          description: Successful retrieval of data.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Todo'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /get-todo-details:
+    get:
+      summary: Get Todo Details
+      description: Retrieves data based on the "Get Todo Details" query. This is a synchronous query operation.
+      operationId: getTodoDetails
+      tags:
+        - TodoApp
+      responses:
+        '200':
+          description: Successful retrieval of data.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Todo'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /get-active-todos:
+    get:
+      summary: Get Active Todos
+      description: Retrieves data based on the "Get Active Todos" query. This is a synchronous query operation.
+      operationId: getActiveTodos
+      tags:
+        - TodoApp
+      responses:
+        '200':
+          description: Successful retrieval of data.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Todo'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /get-completed-todos:
+    get:
+      summary: Get Completed Todos
+      description: Retrieves data based on the "Get Completed Todos" query. This is a synchronous query operation.
+      operationId: getCompletedTodos
+      tags:
+        - TodoApp
+      responses:
+        '200':
+          description: Successful retrieval of data.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Todo'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          example: An error occurred.
+    Todo:
+      type: object
+      description: Represents a Todo in the system.
+      properties:
+        todoID:
+          type: string
+          description: The Todo ID of the Todo.
+          example: T-001
+        title:
+          type: string
+          description: The Title of the Todo.
+          example: Buy Groceries
+        description:
+          type: string
+          description: The Description of the Todo.
+          example: Milk, Eggs, Bread
+        dueDate:
+          type: string
+          description: The Due Date of the Todo.
+          example: '2023-10-26'
+        priority:
+          type: string
+          description: The Priority of the Todo.
+          example: High
+        status:
+          type: string
+          description: The Status of the Todo.
+          example: Active
+        completionNotes:
+          type: string
+          description: The Completion Notes of the Todo.
+          example: All items purchased
+        actualCompletionDate:
+          type: string
+          description: The Actual Completion Date of the Todo.
+          example: '2023-10-25'
+        timeSpentMinutes:
+          type: string
+          description: The Time Spent (minutes) of the Todo.
+          example: '60'
+        satisfactionRating:
+          type: string
+          description: The Satisfaction Rating of the Todo.
+          example: '5'
+        reopenReason:
+          type: string
+          description: The Reopen Reason of the Todo.
+          example: Needs review
+        priorityAdjustment:
+          type: string
+          description: The Priority Adjustment of the Todo.
+          example: Increase to Critical
+        estimatedEffortHours:
+          type: string
+          description: The Estimated Effort (hours) of the Todo.
+          example: '2'
+        deletionReason:
+          type: string
+          description: The Deletion Reason of the Todo.
+          example: Duplicate
+        deletionComment:
+          type: string
+          description: The Deletion Comment of the Todo.
+          example: Created by mistake
+        confirmDeletion:
+          type: string
+          description: The Confirm Deletion of the Todo.
+          example: 'true'
+        retainForDays:
+          type: string
+          description: The Retain For Days of the Todo.
+          example: '30'
+      required:
+        - todoID
+        - title
+        - status
+    CreateTodoRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Buy Groceries
+        description:
+          type: string
+          example: Milk, Eggs, Bread
+        dueDate:
+          type: string
+          example: '2023-10-26'
+        priority:
+          type: string
+          example: High
+      required:
+        - title
+    UpdateTodoDetailsRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Buy Groceries
+        description:
+          type: string
+          example: Milk, Eggs, Bread
+        dueDate:
+          type: string
+          example: '2023-10-26'
+        priority:
+          type: string
+          example: High
+      required:
+        - title
+    MarkTodoAsCompletedRequest:
+      type: object
+      properties:
+        completionNotes:
+          type: string
+          example: All items purchased
+        actualCompletionDate:
+          type: string
+          example: '2023-10-25'
+        timeSpentMinutes:
+          type: string
+          example: '60'
+        satisfactionRating:
+          type: string
+          example: '5'
+    MarkTodoAsReopenedRequest:
+      type: object
+      properties:
+        reopenReason:
+          type: string
+          example: Needs review
+        dueDate:
+          type: string
+          example: '2023-10-26'
+        priorityAdjustment:
+          type: string
+          example: Increase to Critical
+        estimatedEffortHours:
+          type: string
+          example: '2'
+    DeleteTodoRequest:
+      type: object
+      properties:
+        deletionReason:
+          type: string
+          example: Duplicate
+        deletionComment:
+          type: string
+          example: Created by mistake
+        confirmDeletion:
+          type: string
+          example: 'true'
+        retainForDays:
+          type: string
+          example: '30'
+  parameters:
+    TodoId:
+      name: todoID
+      in: path
+      required: true
+      description: The unique identifier for the Todo.
+      schema:
+        type: string
+  responses:
+    BadRequest:
+      description: 'Bad Request: The server cannot or will not process the request due to something that is perceived to be a client error.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: 'Not Found: The server can not find the requested resource.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: 'Internal Server Error: The server has encountered a situation it doesn''t know how to handle.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
